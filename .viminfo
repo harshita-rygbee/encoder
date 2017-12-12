@@ -11,8 +11,8 @@
 ~MSle0~/start
 
 # Command Line History (newest to oldest):
-:q
 :wq
+:q
 :q!
 :a!
 
@@ -26,235 +26,295 @@
 # Input Line History (newest to oldest):
 
 # Registers:
-"1	LINE	0
-	    sys.exit()
+""1	LINE	0
+	def read_csv(filename, sep=",\s*", header=0, missing=""):
 "2	LINE	0
-	    prinddt count
+	
 "3	LINE	0
-			break
+	=======
+	import pandas as pd
 "4	LINE	0
-		if count == 10000:
+	    columns = [i for i in genres]
+	    columns.append('language')
+	    new_df = pd.DataFrame(columns=columns)
+	    for artist in df['artist_name'].unique():
+	        cur_df = df.loc[df['artist_name'] == artist]
+	        new_df = new_df.append(artist_by_genre(cur_df,genres))
+	    indexes = pd.DataFrame(indexes,columns=['index'])
+	    new_df = new_df.assign(index=indexes.values)
+	    new_df= new_df.set_index('index')
+	    return new_df
+	
+	def artist_by_genre(df,genres):
+	    
+	    template_df = pd.DataFrame(data={i:[0] for i in genres})
+	    
+	    columns = genres.copy()
+	    columns.append('language')
+	    res = pd.DataFrame(columns=columns)
+	    
+	    probs = template_df.copy()
+	    for index, row in df.iterrows():
+	        if row['genre_ids'] in genres:
+	            probs[row['genre_ids']]+=1
+	    summ = int(probs.sum(axis = 1))
+	    if summ!=0:
+	        for index, row in probs.iteritems():
+	            row/=summ
+	    else:
+	        probs['-1']=1
+	        
+	    for index, row in df.iterrows():
+	        a = pd.DataFrame(data={'language':[row['language']]})
+	        if row['genre_ids'] in genres:
+	            a = a.join(template_df)
+	            a[row['genre_ids']]=1
+	        else:
+	            a = a.join(probs)
+	        res = res.append(a)
+	    return res
+	
+	df,sid = read_songs('songs_train.csv')
+	df = df_genre(df,20)  
+	df.to_csv('train_out.csv')
+	>>>>>>> e114a51c1e875b5b56a243b39002703f41cbb4f8
 "5	LINE	0
-	    print(df['artist_name'])
+	    df['artist_name'].fillna('Various Artists', inplace=True)
+	    df.drop(['song_length', 'lyricist', 'composer'], axis=1, inplace=True)
+	 
+	    return df, songid_lst
+	
+	def df_genre(df,N=200):      
+	    genres = df['genre_ids'].value_counts()[:N]
+	    genres = list(genres.index)
+	    df = df.sort_values('artist_name', axis=0)
+	    indexes = df.index.values
 "6	LINE	0
-	    print(df['artist_name'])
+	    df = pd.read_csv(filename, sep=sep, header=header, na_values=missing, engine='python')
+	    return df
+	
+	def read_songs(filename='songs.csv'):
+	    print('Reading', filename)
+	    df = read_csv(filename)
+	    songid_lst = df['song_id'].values.tolist()
+	    df = df.set_index('song_id')
+	    df['genre_ids'].fillna('-1', inplace=True)
+	    df['language'].fillna('-1', inplace=True)
 "7	LINE	0
-		input('does artist repeat')
+	<<<<<<< HEAD
 "8	LINE	0
-		count += 1
+	    sys.exit()
 "9	LINE	0
-		continue
-""-	CHAR	0
+	    prinddt count
+"-	CHAR	0
 	0
 
 # File marks:
-'0  1  0  ~/encoder.py
-'1  70  37  ~/encoder.py
-'2  29  13  ~/encoder.py
-'3  31  0  ~/encoder.py
-'4  73  0  ~/encoder.py
-'5  32  37  ~/encoder.py
-'6  47  21  ~/encoder.py
-'7  32  74  ~/encoder.py
-'8  32  47  ~/encoder.py
-'9  4  9  ~/encoder.py
+'0  73  0  ~/encoder.py
+'1  1  0  ~/encoder.py
+'2  69  37  ~/encoder.py
+'3  28  13  ~/encoder.py
+'4  30  0  ~/encoder.py
+'5  72  0  ~/encoder.py
+'6  31  37  ~/encoder.py
+'7  46  21  ~/encoder.py
+'8  31  74  ~/encoder.py
+'9  31  47  ~/encoder.py
 
 # Jumplist (newest first):
--'  1  0  ~/encoder.py
--'  70  37  ~/encoder.py
--'  29  13  ~/encoder.py
--'  31  0  ~/encoder.py
 -'  73  0  ~/encoder.py
--'  32  37  ~/encoder.py
--'  47  21  ~/encoder.py
--'  4  9  ~/encoder.py
--'  33  6  ~/encoder.py
--'  38  3  ~/encoder.py
--'  1  0  ~/artist_by_genre_temp.df
--'  63  26  ~/encoder.py
--'  66  31  ~/encoder.py
--'  69  11  ~/encoder.py
--'  37  22  ~/encoder.py
--'  2  0  ~/encoder.py
--'  64  0  ~/encoder.py
--'  67  26  ~/encoder.py
--'  41  22  ~/encoder.py
--'  74  0  ~/encoder.py
--'  68  0  ~/encoder.py
--'  71  26  ~/encoder.py
--'  35  16  ~/encoder.py
--'  77  11  ~/encoder.py
--'  45  22  ~/encoder.py
--'  78  0  ~/encoder.py
+-'  1  0  ~/encoder.py
+-'  69  37  ~/encoder.py
+-'  28  13  ~/encoder.py
+-'  30  0  ~/encoder.py
 -'  72  0  ~/encoder.py
+-'  31  37  ~/encoder.py
+-'  46  21  ~/encoder.py
+-'  3  9  ~/encoder.py
+-'  32  6  ~/encoder.py
+-'  37  3  ~/encoder.py
 -'  1  0  ~/artist_by_genre_temp.df
--'  61  26  ~/encoder.py
--'  62  0  ~/encoder.py
--'  65  26  ~/encoder.py
--'  39  22  ~/encoder.py
--'  75  11  ~/encoder.py
--'  43  22  ~/encoder.py
--'  76  0  ~/encoder.py
--'  1  0  ~/artist_by_genre_temp.df
--'  58  26  ~/encoder.py
--'  59  0  ~/encoder.py
+-'  62  26  ~/encoder.py
+-'  65  31  ~/encoder.py
+-'  68  11  ~/encoder.py
 -'  36  22  ~/encoder.py
+-'  63  0  ~/encoder.py
+-'  66  26  ~/encoder.py
 -'  40  22  ~/encoder.py
--'  1  0  ~/artist_by_genre_temp.df
--'  56  26  ~/encoder.py
--'  57  0  ~/encoder.py
--'  60  26  ~/encoder.py
--'  34  22  ~/encoder.py
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
+-'  67  0  ~/encoder.py
+-'  70  26  ~/encoder.py
+-'  34  16  ~/encoder.py
+-'  74  11  ~/encoder.py
 -'  44  22  ~/encoder.py
+-'  71  0  ~/encoder.py
 -'  1  0  ~/artist_by_genre_temp.df
+-'  60  26  ~/encoder.py
+-'  61  0  ~/encoder.py
+-'  64  26  ~/encoder.py
+-'  38  22  ~/encoder.py
 -'  42  22  ~/encoder.py
 -'  1  0  ~/artist_by_genre_temp.df
+-'  57  26  ~/encoder.py
+-'  58  0  ~/encoder.py
+-'  35  22  ~/encoder.py
+-'  39  22  ~/encoder.py
 -'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  30  27  ~/encoder.py
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  1  0  ~/artist_by_genre_temp.df
--'  28  4  ~/encoder.py
+-'  55  26  ~/encoder.py
+-'  56  0  ~/encoder.py
+-'  59  26  ~/encoder.py
+-'  33  22  ~/encoder.py
 -'  1  0  ~/artist_by_genre_temp.df
 -'  1  0  ~/artist_by_genre_temp.df
 -'  1  0  ~/artist_by_genre_temp.df
 -'  1  0  ~/artist_by_genre_temp.df
 -'  1  0  ~/artist_by_genre_temp.df
--'  46  21  ~/encoder.py
--'  50  21  ~/encoder.py
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  43  22  ~/encoder.py
+-'  1  0  ~/artist_by_genre_temp.df
+-'  41  22  ~/encoder.py
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  29  27  ~/encoder.py
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  27  4  ~/encoder.py
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  1  0  ~/artist_by_genre_temp.df
+-'  45  21  ~/encoder.py
+-'  49  21  ~/encoder.py
+-'  47  21  ~/encoder.py
+-'  4  9  ~/encoder.py
 
 # History of marks within files (newest to oldest):
 
 > ~/encoder.py
-	"	1	0
-	^	70	38
-	.	70	37
-	+	1	19
-	+	67	0
-	+	31	35
-	+	37	22
-	+	3	10
-	+	31	14
-	+	31	6
-	+	62	18
-	+	69	11
-	+	31	16
-	+	69	11
-	+	31	16
-	+	66	31
-	+	63	26
-	+	31	0
-	+	31	0
-	+	33	0
-	+	29	16
-	+	33	0
-	+	29	12
-	+	33	27
+	"	73	0
+	^	69	38
+	.	74	0
+	+	36	22
+	+	2	10
+	+	30	14
+	+	30	6
+	+	61	18
+	+	68	11
+	+	30	16
+	+	68	11
+	+	30	16
+	+	65	31
+	+	62	26
+	+	30	0
+	+	30	0
+	+	32	0
+	+	28	16
+	+	32	0
+	+	28	12
+	+	32	27
+	+	30	19
+	+	30	27
+	+	37	3
+	+	29	50
+	+	30	29
+	+	30	23
+	+	28	0
+	+	30	0
+	+	32	0
+	+	32	0
+	+	66	26
+	+	32	0
+	+	32	6
+	+	28	0
+	+	30	0
+	+	66	26
+	+	69	33
+	+	32	0
+	+	31	57
+	+	34	15
+	+	34	13
+	+	3	9
+	+	31	48
+	+	24	3
+	+	31	50
+	+	34	0
+	+	31	75
+	+	28	15
+	+	31	62
+	+	69	33
+	+	28	12
+	+	31	62
+	+	69	33
+	+	28	12
+	+	31	62
+	+	69	33
+	+	28	12
+	+	31	63
+	+	69	33
+	+	28	13
+	+	31	63
 	+	31	19
-	+	31	27
-	+	38	3
-	+	30	50
-	+	31	29
-	+	31	23
-	+	29	0
-	+	31	0
-	+	33	0
-	+	33	0
-	+	67	26
-	+	33	0
-	+	33	6
-	+	29	0
-	+	31	0
-	+	67	26
-	+	70	33
-	+	33	0
-	+	32	57
-	+	35	15
-	+	35	13
-	+	4	9
-	+	32	48
-	+	25	3
-	+	32	50
-	+	35	0
-	+	32	75
-	+	29	15
-	+	32	62
-	+	70	33
-	+	29	12
-	+	32	62
-	+	70	33
-	+	29	12
-	+	32	62
-	+	70	33
-	+	29	12
-	+	32	63
-	+	70	33
-	+	29	13
-	+	32	63
-	+	32	19
-	+	29	12
-	+	32	35
-	+	33	56
-	+	33	59
-	+	31	4
-	+	70	33
-	+	29	15
-	+	70	33
-	+	29	12
-	+	70	33
-	+	29	12
-	+	70	33
-	+	29	12
-	+	70	33
-	+	29	13
-	+	70	33
-	+	29	13
-	+	70	33
-	+	29	13
-	+	32	42
-	+	70	33
-	+	21	18
-	+	70	35
-	+	29	13
-	+	70	37
-	+	29	13
-	+	70	37
-	+	29	12
-	+	70	37
-	+	29	12
-	+	70	37
-	+	29	12
-	+	70	37
-	+	29	15
-	+	70	37
-	+	29	12
-	+	70	37
+	+	28	12
+	+	31	35
+	+	32	56
+	+	32	59
+	+	30	4
+	+	69	33
+	+	28	15
+	+	69	33
+	+	28	12
+	+	69	33
+	+	28	12
+	+	69	33
+	+	28	12
+	+	69	33
+	+	28	13
+	+	69	33
+	+	28	13
+	+	69	33
+	+	28	13
+	+	31	42
+	+	69	33
+	+	20	18
+	+	69	35
+	+	28	13
+	+	69	37
+	+	28	13
+	+	69	37
+	+	28	12
+	+	69	37
+	+	28	12
+	+	69	37
+	+	28	12
+	+	69	37
+	+	28	15
+	+	69	37
+	+	28	12
+	+	69	37
+	+	1	0
+	+	74	0
+	+	74	0
 
 > ~/artist_by_genre_temp.df
 	"	1	0
