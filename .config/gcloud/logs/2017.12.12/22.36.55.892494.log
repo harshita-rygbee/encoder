@@ -1,0 +1,27 @@
+2017-12-12 22:36:55,893 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'instances']
+2017-12-12 22:36:55,899 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'instances', 'list']
+2017-12-12 22:36:55,903 DEBUG    root            Running [gcloud.compute.instances.list] with arguments: []
+2017-12-12 22:37:16,184 DEBUG    root            (gcloud.compute.instances.list) Some requests did not succeed:
+ - Insufficient Permission
+Traceback (most recent call last):
+  File "/usr/lib/google-cloud-sdk/lib/googlecloudsdk/calliope/cli.py", line 789, in Execute
+    resources = calliope_command.Run(cli=self, args=args)
+  File "/usr/lib/google-cloud-sdk/lib/googlecloudsdk/calliope/backend.py", line 759, in Run
+    resources = command_instance.Run(args)
+  File "/usr/lib/google-cloud-sdk/lib/surface/compute/instances/list.py", line 40, in Run
+    return lister.Invoke(request_data, list_implementation)
+  File "/usr/lib/google-cloud-sdk/lib/googlecloudsdk/api_lib/compute/lister.py", line 305, in Invoke
+    return implementation(frontend)
+  File "/usr/lib/google-cloud-sdk/lib/googlecloudsdk/api_lib/compute/lister.py", line 1087, in __call__
+    for z in Invoke(zones_list_data, zones_list_implementation)
+  File "/usr/lib/google-cloud-sdk/lib/googlecloudsdk/api_lib/compute/lister.py", line 1030, in __call__
+    utils.RaiseException(errors, ListException)
+  File "/usr/lib/google-cloud-sdk/lib/googlecloudsdk/api_lib/compute/utils.py", line 118, in RaiseException
+    errors))
+ListException: Some requests did not succeed:
+ - Insufficient Permission
+
+2017-12-12 22:37:16,185 ERROR    root            (gcloud.compute.instances.list) Some requests did not succeed:
+ - Insufficient Permission
+
+2017-12-12 22:37:16,199 DEBUG    root            Metrics reporting process started...
